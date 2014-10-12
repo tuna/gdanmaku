@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.1/jquery.min.js"></script>
+  <title>弹幕测试</title>
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <form action="{{ url_for('publish_danmaku') }}" method="post" role="form">
+      
+        <div class="form-group">
+          <label for="danmaku">弹幕内容</label>
+          <input type="danmaku" class="form-control" id="danmaku" name="content" placeholder="在此填写弹幕"> 
+        </div>
+
+        <input type="submit" class="btn btn-success" value="发射弹幕" />
+      </form>  
+    </div> 
+  </div>
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+  $('form').submit(function() {
+
+    var data = JSON.stringify({content: $("#danmaku").val()});
+    console.log(data);
+
+    $.ajax({
+      type: "POST",
+      headers: {"Content-Type": "application/json"},
+      url: $('form').attr("action"),
+      data: data,
+      success: function(){ $("#danmaku").val("");} 
+    });
+
+    return false; 
+  });
+
+});
+
+</script>
+
+</body>
+</html>
