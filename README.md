@@ -14,4 +14,4 @@ use `dbus-send` or `server.py` to send damaku.
 
 ## Screenshot
 
-![](/bigeagle/gdanmaku/raw/master/screenshots/danmaku.png)
+![](https://raw.githubusercontent.com/bigeagle/gdanmaku/master/screenshots/danmaku.png)
