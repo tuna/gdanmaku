@@ -1,5 +1,6 @@
 #!/usr/bin/env python2
 # -*- coding:utf-8 -*-
+import json
 import dbus
 import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
@@ -9,10 +10,11 @@ from danmaku_ui import Danmaku
 
 class DBusObject(dbus.service.Object):
 
-    @dbus.service.method("moe.tuna.danmaku.Service", in_signature='s', out_signature='s')
-    def new_danmaku(self, content):
-        Danmaku(content)
-        return "Welcome!"
+    @dbus.service.method("moe.tuna.danmaku.Service", in_signature=r's', out_signature='s')
+    def new_danmaku(self, jargs):
+        kwargs = json.loads(jargs)
+        Danmaku(**kwargs)
+        return "Done!"
 
     @dbus.service.method("moe.tuna.danmaku.Service", in_signature='', out_signature='s')
     def exit(self):
