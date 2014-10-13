@@ -72,7 +72,7 @@ class Danmaku(Gtk.Window):
     def init_position(self):
         self.set_opacity(1)
         self.height = self._height
-        self.set_size_request(self.width, self.height)
+        self.resize(self.width, self.height)
 
         if self.position == 'fly':
             self.x = self.screen.width()
@@ -136,12 +136,12 @@ class Danmaku(Gtk.Window):
                             cairo.FONT_SLANT_NORMAL,
                             cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(self._font_size)
-        cr.move_to(0, 30)
+        cr.move_to(0, 25)
         cr.show_text(self.text)
         self.width = cr.get_current_point()[0] + 10
 
         cr.set_source_rgb(*border_color)
-        cr.move_to(0, 30)
+        cr.move_to(0, 25)
         cr.set_line_width(0.5)
         cr.text_path(self.text)
         cr.stroke()
@@ -160,7 +160,7 @@ class Danmaku(Gtk.Window):
             if not self.quited:
                 self._clean_exit()
         else:
-            GObject.timeout_add(30, self.fly)
+            GObject.timeout_add(100, self.fly)
 
         self.move(self.x, self.y)
 
