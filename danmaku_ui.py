@@ -7,6 +7,7 @@ from threading import Lock
 
 color_styles = {
     "white": ((1, 1, 1), (0, 0, 0), ),
+    "black": ((0, 0, 0), (1, 1, 1), ),
     "blue": ((20/255.0, 95/255.0, 198/255.0), (1, 1, 1), ),
     "lightblue": ((100/255.0, 172/255.0, 239/255.0), (0, 0, 0), ),
     "cyan": ((0, 1, 1), (0, 0, 0), ),
@@ -25,7 +26,7 @@ class Danmaku(Gtk.Window):
     vertical_slots = None
 
     _font_size = 24
-    _height = _font_size + 4
+    _height = _font_size + 6
 
     def __init__(self, text=u"我来组成弹幕", style="white", position="fly"):
         super(Danmaku, self).__init__(
@@ -52,7 +53,8 @@ class Danmaku(Gtk.Window):
         with Danmaku._lock:
             Danmaku.count += 1
             if Danmaku.vertical_slots is None:
-                Danmaku.vertical_slots = [0] * (self.screen.get_height() / self._height)
+                Danmaku.vertical_slots = [0] * \
+                    ((self.screen.get_height() - 20) / self._height)
 
         self.set_app_paintable(True)
 
@@ -90,7 +92,7 @@ class Danmaku(Gtk.Window):
                     GObject.timeout_add(1000, self.init_position)
                     return
 
-                self.y = self.screen.height() + self.height * self.vslot
+                self.y = self.screen.height() + self.height * self.vslot - 10
                 # print self.text, self.x, self.y
 
         elif self.position == 'top':
@@ -107,7 +109,7 @@ class Danmaku(Gtk.Window):
                     GObject.timeout_add(1000, self.init_position)
                     return
 
-                self.y = self.height * self.vslot
+                self.y = self.height * self.vslot + 10
 
         self.move(self.x, self.y)
         self.position_inited = True
@@ -134,12 +136,12 @@ class Danmaku(Gtk.Window):
                             cairo.FONT_SLANT_NORMAL,
                             cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(self._font_size)
-        cr.move_to(0, 20)
+        cr.move_to(0, 30)
         cr.show_text(self.text)
         self.width = cr.get_current_point()[0] + 10
 
         cr.set_source_rgb(*border_color)
-        cr.move_to(0, 20)
+        cr.move_to(0, 30)
         cr.set_line_width(0.5)
         cr.text_path(self.text)
         cr.stroke()
@@ -171,7 +173,7 @@ class Danmaku(Gtk.Window):
 
         with Danmaku._lock:
             Danmaku.count -= 1
-            print(Danmaku.count)
+            # print(Danmaku.count)
             if self.vslot is not None:
                 Danmaku.vertical_slots[self.vslot] = 0
 

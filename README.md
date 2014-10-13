@@ -16,7 +16,7 @@ use `dbus-send` or `server.py` to send damaku.
 
 - [x] Colored danmaku
 - [x] Positioned danmaku 
-- [ ] HTTP Server/Client
+- [x] HTTP Server/Client
 - [ ] New Screenshots [#1](https://github.com/bigeagle/gdanmaku/issues/1)
 
 ## Screenshot

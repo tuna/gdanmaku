@@ -22,13 +22,11 @@ class DBusObject(dbus.service.Object):
         return "Bye!"
 
 
-if __name__ == '__main__':
-
+def danmaku_service():
     DBusGMainLoop(set_as_default=True)
     session_bus = dbus.SessionBus()
     name = dbus.service.BusName("moe.tuna.danmaku", session_bus)
     _object = DBusObject(session_bus, "/Danmaku")
     Gtk.main()
-    # app.run()
 
 # vim: ts=4 sw=4 sts=4 expandtab
