@@ -10,10 +10,14 @@ the display service
 
 ## Todo
 
-- [x] Colored danmaku
-- [x] Positioned danmaku 
-- [x] HTTP Server/Client
-- [x] New Screenshots [#1](https://github.com/bigeagle/gdanmaku/issues/1)
+- [ ] More channels to send danmaku
+    - [ ] danmaku.tuna.moe
+    - [ ] Twitter
+    - [ ] Wechat
+- [ ] User defined configurations
+    - [ ] font size
+    - [ ] speed
+    - [ ] shadow style
 
 ## Screenshot
 
