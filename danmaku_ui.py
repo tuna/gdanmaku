@@ -25,7 +25,7 @@ class Danmaku(Gtk.Window):
     count = 0
     vertical_slots = None
 
-    _font_size = 24
+    _font_size = 28
     _height = _font_size + 6
 
     def __init__(self, text=u"我来组成弹幕", style="white", position="fly"):
@@ -77,6 +77,9 @@ class Danmaku(Gtk.Window):
         if self.position == 'fly':
             self.x = self.screen.width()
             self.y = randint(0, self.screen.height())
+            self.step = min(len(self.text) * 0.04 + 1, 8)
+            # print self.step
+            self.interval = 30
 
         elif self.position == 'bottom':
             self.x = (self.screen.width() - self.width) / 2
@@ -155,14 +158,17 @@ class Danmaku(Gtk.Window):
             GObject.timeout_add(5000, self._clean_exit)
 
     def fly(self):
-        self.x -= 3
+        _x = int(self.x)
+        self.x -= self.step
+        x_dst = int(self.x)
         if self.x < -self.width:
             if not self.quited:
                 self._clean_exit()
         else:
-            GObject.timeout_add(100, self.fly)
+            GObject.timeout_add(self.interval, self.fly)
 
-        self.move(self.x, self.y)
+        if _x != x_dst:
+            self.move(x_dst, self.y)
 
     def _clean_exit(self):
         self.destroy()
@@ -184,8 +190,14 @@ class Danmaku(Gtk.Window):
 
 if __name__ == "__main__":
     TEST = True
-    Danmaku("我爱bilibili")
+    Danmaku("T")
     Danmaku("Test", style="blue")
+    Danmaku("我爱bilibili")
+    Danmaku("我爱bilibili还有acfun")
+    Danmaku("穹妹是我的")
+    Danmaku("括号君我要给你生猴子")
+    Danmaku("括号君我要你给我生猴子")
+    Danmaku("括号君王尼玛黑雪学姐我要你给我生猴子")
     Danmaku("Test", style="blue", position="top")
     Danmaku("Test", style="green", position="top")
     Danmaku("马云保护协会", style="blue", position="top")
