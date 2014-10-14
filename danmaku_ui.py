@@ -77,7 +77,7 @@ class Danmaku(Gtk.Window):
         if self.position == 'fly':
             self.x = self.screen.width()
             self.y = randint(0, self.screen.height())
-            self.step = min(len(self.text) * 0.04 + 1, 8)
+            self.step = min(len(self.text) * 0.03 + 1.2, 8)
             # print self.step
             self.interval = 30
 
