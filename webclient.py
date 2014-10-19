@@ -5,7 +5,8 @@ import json
 from dbus_client import interface
 
 
-def subscribe_danmaku(server="http://localhost:5000/danmaku/stream"):
+def subscribe_danmaku(server="http://dm.tuna.moe/danmaku/stream"):
+    print(server)
     while 1:
         try:
             res = requests.get(server)

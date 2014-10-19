@@ -17,7 +17,7 @@ if __name__ == '__main__':
     parser_subscriber.add_argument(
         "--server",
         type=str,
-        default="http://localhost:5000/danmaku/stream",
+        default="http://dm.tuna.moe/danmaku/stream",
         help="danmaku stream server"
     )
     parser_kill = subparsers.add_parser('kill', help="kill danmaku display serverice")
