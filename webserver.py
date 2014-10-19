@@ -16,7 +16,7 @@ danmaku_channels = {
 
 @app.route("/", methods=["GET"])
 def index():
-    channel = request.args["c"] or "default"
+    channel = request.args.get("c", "default")
     if channel not in danmaku_channels:
         danmaku_channels[channel] = []
 
@@ -25,7 +25,7 @@ def index():
 
 @app.route("/danmaku/stream", methods=["GET"])
 def danmaku_stream():
-    channel = request.args["c"] or "default"
+    channel = request.args.get("c", "default")
     if channel not in danmaku_channels:
         danmaku_channels[channel] = []
 
@@ -40,7 +40,7 @@ def danmaku_stream():
 
 @app.route("/danmaku/", methods=["POST"])
 def publish_danmaku():
-    channel = request.args["c"] or "default"
+    channel = request.args.get("c", "default")
     if channel not in danmaku_channels:
         danmaku_channels[channel] = []
 
