@@ -46,7 +46,7 @@
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <h2>TUNA弹幕</h2>
-      <form action="{{ url_for('publish_danmaku') }}" method="post" role="form">
+      <form action="{{ url_for('publish_danmaku') }}?c={{channel}}" method="post" role="form">
         
         <div class="form-group" id="position-selection">
           <label for="position">弹幕位置</label>

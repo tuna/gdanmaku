@@ -7,7 +7,10 @@ from dbus_client import interface
 
 def subscribe_danmaku(server="http://localhost:5000/danmaku/stream"):
     while 1:
-        res = requests.get(server)
+        try:
+            res = requests.get(server)
+        except requests.exceptions.ConnectionError:
+            continue
         if res.status_code == 200 and res.text:
             for opt in json.loads(res.text):
                 interface.new_danmaku(json.dumps(opt))

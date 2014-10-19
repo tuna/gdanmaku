@@ -9,29 +9,41 @@ from gevent.wsgi import WSGIServer
 app = Flask("Danmaku")
 
 new_danmaku = gevent.event.Event()
-danmaku_list = []
+danmaku_channels = {
+    "default": []
+}
 
 
 @app.route("/", methods=["GET"])
 def index():
-    return render_template("index.html")
+    channel = request.args["c"] or "default"
+    if channel not in danmaku_channels:
+        danmaku_channels[channel] = []
+
+    return render_template("index.html", channel=channel)
 
 
 @app.route("/danmaku/stream", methods=["GET"])
 def danmaku_stream():
-    global danmaku_list
-    if new_danmaku.wait(timeout=5):
+    channel = request.args["c"] or "default"
+    if channel not in danmaku_channels:
+        danmaku_channels[channel] = []
 
-        r = json.dumps(danmaku_list)
-        danmaku_list = []
+    if new_danmaku.wait(timeout=5):
+        r = json.dumps(danmaku_channels[channel])
+        danmaku_channels[channel] = []
         new_danmaku.clear()
         return r
     else:
-        return json.dumps(danmaku_list)
+        return json.dumps(danmaku_channels[channel])
 
 
 @app.route("/danmaku/", methods=["POST"])
 def publish_danmaku():
+    channel = request.args["c"] or "default"
+    if channel not in danmaku_channels:
+        danmaku_channels[channel] = []
+
     if request.json:
         danmaku = {
             "text": request.json["content"],
@@ -46,7 +58,7 @@ def publish_danmaku():
         }
 
     # interface.new_danmaku(content)
-    danmaku_list.append(danmaku)
+    danmaku_channels[channel].append(danmaku)
     new_danmaku.set()
     return "OK"
 
