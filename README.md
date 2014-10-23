@@ -4,14 +4,16 @@ GDanmaku is a small GTK program to play danmaku on any screen.
 
 ## Run Demo
 
-run `danmaku.py display` to start the danmaku display service, and run `webserver.py` to start the danmaku publishing server,
-which can locate in any accessable place, then run `danmaku.py subscribe` to subscribe danmaku stream, which would be shown by
-the display service
+run `webserver.py` to start a publishing server, then run 
+
+```
+danmaku.py --server=http://localhost:5000/danmaku/stream
+```
 
 ## Todo
 
 - [ ] More channels to send danmaku
-    - [ ] danmaku.tuna.moe
+    - [x] dm.tuna.moe
     - [ ] Twitter
     - [ ] Wechat
 - [ ] User defined configurations
