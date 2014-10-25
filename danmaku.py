@@ -5,6 +5,7 @@ import json
 import argparse
 import threading
 import requests
+from settings import load_config
 
 
 def app_main(dm_server):
@@ -19,7 +20,8 @@ def app_main(dm_server):
             except:
                 continue
 
-    def subscribe_danmaku(server="http://dm.tuna.moe/danmaku/stream"):
+    def subscribe_danmaku(server):
+        print("subscribing from server: {}".format(server))
         while 1:
             try:
                 res = requests.get(server)
@@ -43,13 +45,28 @@ def app_main(dm_server):
     Gtk.main()
 
 
+def app_config():
+    from config_panel import ConfigPanel
+    from gi.repository import Gtk
+
+    ConfigPanel()
+    Gtk.main()
+
+
 if __name__ == '__main__':
+    options = load_config()
+
     parser = argparse.ArgumentParser(prog="gdanmaku")
     parser.add_argument(
         "--server",
         type=str,
-        default="http://dm.tuna.moe/danmaku/stream",
+        default=options["http_stream_server"],
         help="danmaku stream server"
+    )
+    parser.add_argument(
+        '--config',
+        action="store_true",
+        help="run configuration window"
     )
 
     args = parser.parse_args()
@@ -57,7 +74,10 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     signal.signal(signal.SIGTERM, signal.SIG_DFL)
 
-    app_main(args.server)
+    if args.config:
+        app_config()
+    else:
+        app_main(args.server)
 
 
 # vim: ts=4 sw=4 sts=4 expandtab

@@ -4,6 +4,7 @@ from random import randint
 import cairo
 from gi.repository import Gtk, GObject
 from threading import Lock
+from config import load_config
 
 color_styles = {
     "white": ((1, 1, 1), (0, 0, 0), ),
@@ -19,13 +20,17 @@ color_styles = {
 
 TEST = False
 
+OPTIONS = load_config()
+
 
 class Danmaku(Gtk.Window):
     _lock = Lock()
     count = 0
     vertical_slots = None
 
-    _font_size = 28
+    _font_family = OPTIONS['font_family']
+    _speed_scale = OPTIONS['speed_scale']
+    _font_size = OPTIONS['font_size']
     _height = _font_size + 6
 
     def __init__(self, text=u"我来组成弹幕", style="white", position="fly"):
@@ -76,8 +81,8 @@ class Danmaku(Gtk.Window):
 
         if self.position == 'fly':
             self.x = self.screen.width()
-            self.y = randint(0, self.screen.height())
-            self.step = min(len(self.text) * 0.03 + 1.2, 8)
+            self.y = randint(0, self.screen.height()-self._font_size-20)
+            self.step = min(len(self.text) * 0.03 + 1.2, 8) * self._speed_scale
             # print self.step
             self.interval = 30
 
@@ -135,7 +140,7 @@ class Danmaku(Gtk.Window):
         )
 
         cr.set_source_rgb(*font_color)
-        cr.select_font_face("WenQuanYi Micro Hei",
+        cr.select_font_face(self._font_family,
                             cairo.FONT_SLANT_NORMAL,
                             cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(self._font_size)
@@ -189,6 +194,10 @@ class Danmaku(Gtk.Window):
 
 
 if __name__ == "__main__":
+    import signal
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+    signal.signal(signal.SIGTERM, signal.SIG_DFL)
+
     TEST = True
     Danmaku("T")
     Danmaku("Test", style="blue")
