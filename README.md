@@ -16,10 +16,9 @@ danmaku.py --server=http://localhost:5000/danmaku/stream
     - [x] dm.tuna.moe
     - [ ] Twitter
     - [ ] Wechat
-- [ ] User defined configurations
-    - [ ] font size
-    - [ ] speed
-    - [ ] shadow style
+- [x] User defined configurations
+    - [x] font size
+    - [x] speed
 
 ## Screenshot
 
