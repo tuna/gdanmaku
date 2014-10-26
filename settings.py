@@ -17,18 +17,18 @@ _cfg_file = os.path.join(_xdg_cfg_dir, "gdanmaku", "config.json")
 
 
 def load_config():
-    options = {}
+    options = dict(DEFAULT_OPTIONS.items())
+
     if os.path.exists(_cfg_file):
         try:
-            with open(_cfg_file) as f:
+            with open(_cfg_file, 'r') as f:
                 opts = json.load(f)
             options['font_family'] = opts['font_family']
             options['font_size'] = opts['font_size']
             options['speed_scale'] = opts['speed_scale']
             options['http_stream_server'] = opts['http_stream_server']
         except:
-            for k, v in DEFAULT_OPTIONS.items():
-                options[k] = v
+            options = dict(DEFAULT_OPTIONS.items())
             save_config(options)
     else:
         if not os.path.exists(os.path.dirname(_cfg_file)):
@@ -39,7 +39,6 @@ def load_config():
 
 
 def save_config(options):
-    print options
     with open(_cfg_file, 'wb') as f:
         json.dump(options, f, indent=4)
 

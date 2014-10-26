@@ -78,7 +78,7 @@ class ConfigPanel(Gtk.Window):
     def on_font_select(self, widget):
         fontname = widget.get_font_name()
         font_family = Pango.font_description_from_string(fontname).get_family()
-        font_size = widget.get_font_size()
+        font_size = widget.get_font_size() / 1000
         self.options['font_family'] = font_family
         self.options['font_size'] = font_size
 

@@ -4,7 +4,7 @@ from random import randint
 import cairo
 from gi.repository import Gtk, GObject
 from threading import Lock
-from config import load_config
+from settings import load_config
 
 color_styles = {
     "white": ((1, 1, 1), (0, 0, 0), ),
