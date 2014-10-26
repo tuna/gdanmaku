@@ -23,6 +23,8 @@ Let's use `ooxx` as a channel name, run
 ./danmaku.py --server=http://dm.tuna.moe/danmaku/stream?c=ooxx
 ```
 
+or just run `./danmaku.py` and fill server url in the first dialog.
+
 and post on http://dm.tuna.moe/?c=ooxx
 
 ### Server Hosted Service

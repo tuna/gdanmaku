@@ -76,6 +76,13 @@ class Main(object):
         Gtk.main()
 
 
+def app_config():
+    from config_panel import ConfigPanel
+    from gi.repository import Gtk
+    ConfigPanel()
+    Gtk.main()
+
+
 def main():
     options = load_config()
 
@@ -87,13 +94,22 @@ def main():
         help="danmaku stream server"
     )
 
+    parser.add_argument(
+        '--config',
+        action="store_true",
+        help="run configuration window"
+    )
+
     args = parser.parse_args()
 
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     signal.signal(signal.SIGTERM, signal.SIG_DFL)
 
-    main_app = Main(args.server)
-    main_app.run()
+    if args.config:
+        app_config()
+    else:
+        main_app = Main(args.server)
+        main_app.run()
 
 
 if __name__ == '__main__':
