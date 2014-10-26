@@ -5,9 +5,10 @@ import json
 import argparse
 import threading
 import requests
+
 from settings import load_config
 from app import GDanmakuApp
-
+from server_selection import ServerSelectionWindow
 from danmaku_ui import Danmaku
 from gi.repository import Gtk, GLib, GObject
 
@@ -16,6 +17,8 @@ class Main(object):
 
     def __init__(self, server=None):
         self.server = server
+        server_selection = ServerSelectionWindow(self.server)
+        server_selection.connect('server-selected', self.on_server_selected)
         self.app = GDanmakuApp(self)
         self.thread_sub = None
         self.enabled = True
@@ -61,15 +64,15 @@ class Main(object):
                 dm.hide()
                 dm._clean_exit()
 
-    def run(self):
-        GObject.threads_init()
-        dm_server = self.server or self.options["http_stream_server"]
+    def on_server_selected(self, widget, server):
         thread_sub = threading.Thread(
-            target=self._subscribe_danmaku, args=(dm_server, ))
+            target=self._subscribe_danmaku, args=(server, ))
         thread_sub.daemon = True
         thread_sub.start()
         self.thread_sub = thread_sub
 
+    def run(self):
+        GObject.threads_init()
         Gtk.main()
 
 
