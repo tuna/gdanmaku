@@ -6,21 +6,23 @@ import argparse
 import threading
 import requests
 from settings import load_config
+from app import GDanmakuApp
+
+from danmaku_ui import Danmaku
+from gi.repository import Gtk, GLib, GObject
 
 
-def app_main(dm_server):
+class Main(object):
 
-    from danmaku_ui import Danmaku
-    from gi.repository import Gtk, GLib, GObject
+    def __init__(self, server=None):
+        self.server = server
+        self.app = GDanmakuApp(self)
+        self.thread_sub = None
+        self.enabled = True
+        self.options = load_config()
+        self.live_danmakus = {}
 
-    def new_danmaku(dm_opts):
-        for opt in dm_opts:
-            try:
-                Danmaku(**opt)
-            except:
-                continue
-
-    def subscribe_danmaku(server):
+    def _subscribe_danmaku(self, server):
         print("subscribing from server: {}".format(server))
         while 1:
             try:
@@ -33,27 +35,45 @@ def app_main(dm_server):
                 except:
                     continue
                 else:
-                    GLib.idle_add(new_danmaku, dm_opts)
+                    GLib.idle_add(self.new_danmaku, dm_opts)
 
-    GObject.threads_init()
+    def new_danmaku(self, dm_opts):
+        if not self.enabled:
+            return
 
-    thread_sub = threading.Thread(
-        target=subscribe_danmaku, args=(dm_server, ))
-    thread_sub.daemon = True
-    thread_sub.start()
+        for opt in dm_opts:
+            try:
+                dm = Danmaku(**opt)
+                dm.connect('delete-event', self.on_danmaku_delete)
+            except Exception as e:
+                print(e)
+                continue
 
-    Gtk.main()
+            self.live_danmakus[id(dm)] = dm
+
+    def on_danmaku_delete(self, dm, event):
+        self.live_danmakus.pop(id(dm))
+
+    def toggle_danmaku(self):
+        self.enabled = not self.enabled
+        if not self.enabled:
+            for _, dm in self.live_danmakus.iteritems():
+                dm.hide()
+                dm._clean_exit()
+
+    def run(self):
+        GObject.threads_init()
+        dm_server = self.server or self.options["http_stream_server"]
+        thread_sub = threading.Thread(
+            target=self._subscribe_danmaku, args=(dm_server, ))
+        thread_sub.daemon = True
+        thread_sub.start()
+        self.thread_sub = thread_sub
+
+        Gtk.main()
 
 
-def app_config():
-    from config_panel import ConfigPanel
-    from gi.repository import Gtk
-
-    ConfigPanel()
-    Gtk.main()
-
-
-if __name__ == '__main__':
+def main():
     options = load_config()
 
     parser = argparse.ArgumentParser(prog="gdanmaku")
@@ -63,21 +83,17 @@ if __name__ == '__main__':
         default=options["http_stream_server"],
         help="danmaku stream server"
     )
-    parser.add_argument(
-        '--config',
-        action="store_true",
-        help="run configuration window"
-    )
 
     args = parser.parse_args()
 
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     signal.signal(signal.SIGTERM, signal.SIG_DFL)
 
-    if args.config:
-        app_config()
-    else:
-        app_main(args.server)
+    main_app = Main(args.server)
+    main_app.run()
 
+
+if __name__ == '__main__':
+    main()
 
 # vim: ts=4 sw=4 sts=4 expandtab

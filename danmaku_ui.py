@@ -33,6 +33,13 @@ class Danmaku(Gtk.Window):
     _font_size = OPTIONS['font_size']
     _height = _font_size + 6
 
+    @classmethod
+    def reload_config(cls, *args):
+        options = load_config()
+        cls._font_family = options['font_family']
+        cls._speed_scale = options['speed_scale']
+        cls._font_size = options['font_size']
+
     def __init__(self, text=u"我来组成弹幕", style="white", position="fly"):
         super(Danmaku, self).__init__(
             type=Gtk.WindowType.POPUP, title="Danmaku")
@@ -176,7 +183,6 @@ class Danmaku(Gtk.Window):
             self.move(x_dst, self.y)
 
     def _clean_exit(self):
-        self.destroy()
         if self.quited:
             return
 
@@ -191,6 +197,8 @@ class Danmaku(Gtk.Window):
             if TEST:
                 if Danmaku.count <= 0:
                     Gtk.main_quit()
+
+        self.close()
 
 
 if __name__ == "__main__":

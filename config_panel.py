@@ -1,12 +1,16 @@
 #!/usr/bin/env python2
 # -*- coding:utf-8 -*-
-from gi.repository import Gtk, Pango
+from gi.repository import Gtk, Pango, GObject
 from settings import load_config, save_config
 
 
 class ConfigPanel(Gtk.Window):
 
-    def __init__(self):
+    __gsignals__ = {
+        "config-saved": (GObject.SIGNAL_RUN_FIRST, None, ())
+    }
+
+    def __init__(self, is_main=True):
         super(ConfigPanel, self).__init__(
             type=Gtk.WindowType.TOPLEVEL, title="Danmaku")
 
@@ -61,7 +65,7 @@ class ConfigPanel(Gtk.Window):
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL,
                        spacing=20, margin=10)
         cancel_button = Gtk.Button("Cancel")
-        cancel_button.connect("clicked", Gtk.main_quit)
+        cancel_button.connect("clicked", lambda _: self.close())
         hbox.pack_start(cancel_button, True, True, 0)
 
         ok_button = Gtk.Button("OK")
@@ -69,7 +73,9 @@ class ConfigPanel(Gtk.Window):
         hbox.pack_start(ok_button, True, True, 0)
         vbox.pack_start(hbox, True, True, 0)
 
-        self.connect("delete-event", Gtk.main_quit)
+        if is_main:
+            self.connect("delete-event", Gtk.main_quit)
+
         self.show_all()
 
     def on_server_changed(self, widget):
@@ -87,7 +93,8 @@ class ConfigPanel(Gtk.Window):
 
     def on_confirm_button(self, widget):
         save_config(self.options)
-        Gtk.main_quit()
+        self.emit("config-saved")
+        self.close()
 
 if __name__ == "__main__":
     cp = ConfigPanel()
