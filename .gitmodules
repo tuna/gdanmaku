@@ -1,0 +1,3 @@
+[submodule "webserver"]
+	path = webserver
+	url = git@github.com:tuna/gdanmaku-server.git
