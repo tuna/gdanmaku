@@ -35,8 +35,8 @@ class ConfigPanel(Gtk.Window):
         hbox.pack_start(font_label, False, True, 0)
 
         font_button = Gtk.FontButton(
-            font_name="{} {}".format(self.options['font_family'],
-                                     self.options['font_size']))
+            font_name=u"{} {}".format(self.options['font_family'],
+                                      self.options['font_size']))
 
         font_button.connect("font-set", self.on_font_select)
         hbox.pack_start(font_button, False, True, 0)
