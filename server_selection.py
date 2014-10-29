@@ -8,7 +8,7 @@ from settings import load_config, save_config
 class ServerSelectionWindow(Gtk.Window):
 
     __gsignals__ = {
-        "server-selected": (GObject.SIGNAL_RUN_FIRST, None, (str, ))
+        "server-selected": (GObject.SIGNAL_RUN_FIRST, None, (str, str, str))
     }
 
     def __init__(self, server, is_main=False):
@@ -41,6 +41,31 @@ class ServerSelectionWindow(Gtk.Window):
         vbox.pack_start(hbox, True, True, 0)
         self.save_default_btn = save_default_btn
 
+        # Channel
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL,
+                       spacing=10, margin=10)
+        channel_label = Gtk.Label("Channel:")
+        hbox.pack_start(channel_label, False, True, 0)
+
+        channel_entry = Gtk.Entry()
+        channel_entry.set_width_chars(30)
+        hbox.pack_start(channel_entry, True, True, 0)
+        vbox.pack_start(hbox, True, True, 0)
+        self.channel_entry = channel_entry
+
+        # password
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL,
+                       spacing=10, margin=10)
+        passwd_label = Gtk.Label("Password:")
+        hbox.pack_start(passwd_label, False, True, 0)
+
+        passwd_entry = Gtk.Entry()
+        passwd_entry.set_visibility(False)
+        passwd_entry.set_width_chars(30)
+        hbox.pack_start(passwd_entry, True, True, 0)
+        vbox.pack_start(hbox, True, True, 0)
+        self.passwd_entry = passwd_entry
+
         # Buttons
         hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL,
                        spacing=20, margin=10)
@@ -60,12 +85,14 @@ class ServerSelectionWindow(Gtk.Window):
 
     def on_confirm_button(self, widget):
         server = self.server_entry.get_text()
+        channel = self.channel_entry.get_text()
+        password = self.passwd_entry.get_text()
         if self.save_default_btn.get_active():
             options = load_config()
             options["http_stream_server"] = server
             save_config(options)
 
-        self.emit("server-selected", server)
+        self.emit("server-selected", server, channel, password)
         self.close()
 
 
@@ -73,4 +100,5 @@ if __name__ == "__main__":
     options = load_config()
     sel_win = ServerSelectionWindow(options["http_stream_server"], is_main=True)
     Gtk.main()
+
 # vim: ts=4 sw=4 sts=4 expandtab

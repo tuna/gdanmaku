@@ -25,11 +25,14 @@ class Main(object):
         self.options = load_config()
         self.live_danmakus = {}
 
-    def _subscribe_danmaku(self, server):
-        print("subscribing from server: {}".format(server))
+    def _subscribe_danmaku(self, server, channel, password):
+        print("subscribing from server: {}, channel: {}".format(server, channel))
+        url = server + self.options["http_stream_uri"].format(cname=channel)
+
         while 1:
             try:
-                res = requests.get(server)
+                res = requests.get(
+                    url, headers={"X-GDANMAKU-AUTH-KEY": password})
             except requests.exceptions.ConnectionError:
                 continue
             if res.status_code == 200 and res.text:
@@ -64,9 +67,9 @@ class Main(object):
                 dm.hide()
                 dm._clean_exit()
 
-    def on_server_selected(self, widget, server):
+    def on_server_selected(self, widget, server, channel, password):
         thread_sub = threading.Thread(
-            target=self._subscribe_danmaku, args=(server, ))
+            target=self._subscribe_danmaku, args=(server, channel, password))
         thread_sub.daemon = True
         thread_sub.start()
         self.thread_sub = thread_sub
