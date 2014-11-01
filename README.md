@@ -1,6 +1,6 @@
 # GDanmaku
 
-GDanmaku is a small GTK program to play danmaku on any screen.
+GDanmaku, pronounced as `/danmaku/` is a small GTK program to play danmaku on any screen.
 
 ## Warning
 
