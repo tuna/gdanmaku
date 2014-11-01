@@ -28,7 +28,7 @@ class Main(object):
     def _subscribe_danmaku(self, server, channel, password):
         print("subscribing from server: {}, channel: {}".format(server, channel))
         uri = self.options["http_stream_uri"].format(cname=channel)
-        if uri.starswith("/") and server.endswith("/"):
+        if uri.startswith("/") and server.endswith("/"):
             server = server[:-1]
         url = server + uri
 
