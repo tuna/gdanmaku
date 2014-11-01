@@ -151,12 +151,12 @@ class Danmaku(Gtk.Window):
                             cairo.FONT_SLANT_NORMAL,
                             cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(self._font_size)
-        cr.move_to(0, 25)
+        cr.move_to(0, self._font_size)
         cr.show_text(self.text)
         self.width = cr.get_current_point()[0] + 10
 
         cr.set_source_rgb(*border_color)
-        cr.move_to(0, 25)
+        cr.move_to(0, self._font_size)
         cr.set_line_width(0.5)
         cr.text_path(self.text)
         cr.stroke()
