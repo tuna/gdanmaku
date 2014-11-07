@@ -1,16 +1,11 @@
 #!/usr/bin/env python2
 # -*- coding:utf-8 -*-
 import os
-import sys
 
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
-
-if sys.platform == "win32":
-    import py2exe
-
 
 packages = ["gdanmaku"]
 requires = ["requests"]
