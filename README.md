@@ -1,3 +1,5 @@
+**I defected from GTK to Qt, this project is deprecated, please move to https://github.com/bigeagle/danmaQ**
+
 # GDanmaku
 
 GDanmaku, pronounced as `/danmaku/` is a small GTK program to play danmaku on any screen.
